@@ -6,11 +6,11 @@
     <script>
     /*Use Cases*/
     /*
-    1. Add a bug
-    2. List the bugs
-    3. Toggle the completion status of the bugs
-    3.5 Remove closed bugs
-    4. Display statistics ( closed / total )
+    1. Add a bug - done
+    2. List the bugs - done
+    3. Toggle the completion status of the bugs - done
+    3.5 Remove closed bugs - done
+    4. Display statistics ( closed / total ) - done
     5. Search for a bug
     6. Sort the bugs
     7. Improvise on how the bug is displayed
@@ -45,10 +45,10 @@
 
         bugTrackerApp.controller("bugsController", function($scope){
             $scope.bugs = [
-                new Bug('stack overflow error', false ),
+                new Bug('stack overflow error', true ),
                 new Bug('object reference not set to an instance of an object', false),
-                new Bug('undefined is not a function', false ),
-                new Bug('garbage collector not in time', false )
+                new Bug('undefined is not a function', true ),
+                new Bug('garbage collector execution error', false )
             ];
             $scope.newBug = '';
             $scope.addBug = function(){
@@ -63,6 +63,15 @@
                     return bug.isClosed;
                 }).length;
             };
+            $scope.removeClosed = function(){
+                for(var i= $scope.bugs.length -1; i>=0; i--){
+                    var bug = $scope.bugs[i];
+                    if (bug.isClosed)
+                        $scope.bugs.splice(i,1);
+                }
+            };
+
+
         });
 
     </script>
@@ -76,25 +85,48 @@
         <span>{{bugs.length}}</span></div>
         <div class="search">
             <label for="">Search :</label>
-            <input type="text">
+            <input type="text" ng-model="searchBug.name">
             <label for="">Closed ?:</label>
-            <input type="checkbox">
+            <input type="checkbox" ng-model="searchBug.isClosed">
+            <input type="button" value="Show All" ng-click="searchBug.isClosed = undefined">
         </div>
         <div class="sort">
             <label for="">Sort :</label>
-            <input type="text">
+            <input type="text" ng-model="sortBy">
             <label for="">Descending ?:</label>
-            <input type="checkbox">
+            <input type="checkbox" ng-model="sortOrderInDescending">
         </div>
         <div class="list">
             <label for="">Bug :</label>
             <input type="text" ng-model="newBug">
             <input type="button" value="Add Bug" ng-click="addBug()">
-            <input type="button" value="Remove Closed">
+            <input type="button" value="Remove Closed" ng-click="removeClosed()">
             <ol>
-                <li ng-repeat="bug in bugs" ng-click="toggle(bug)">{{bug}}</li>
+                <li
+                    ng-repeat="bug in bugs | filter:searchBug | orderBy:sortBy:sortOrderInDescending"
+                    ng-click="toggle(bug)"
+                    ng-class="{closed : bug.isClosed}"
+                >{{bug}}</li>
             </ol>
         </div>
     </div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
