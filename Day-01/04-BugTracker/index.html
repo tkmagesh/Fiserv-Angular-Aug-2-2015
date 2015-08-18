@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+    /*Use Cases*/
+    /*
+    1. Add a bug
+    2. List the bugs
+    3. Toggle the completion status of the bugs
+    3.5 Remove closed bugs
+    4. Display statistics ( closed / total )
+    5. Search for a bug
+    6. Sort the bugs
+    7. Improvise on how the bug is displayed
+    8. Display the createdAt time
+    9. Persist the bugs in the server
+    10. Repeat 1-9 for 'Project'
+    */
+    </script>
+    <style>
+        .closed {
+            color : red;
+            text-decoration: line-through;
+            font-style: italic;
+            font-weight: bold;
+        }
+        div {
+            margin-bottom: 10px;
+        }
+        li{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bug Tracker</h1>
+    <div class="content">
+        <div class="stats"><span class="closed">2</span> / <span>5</span></div>
+        <div class="search">
+            <label for="">Search :</label>
+            <input type="text" name="" id="">
+            <label for="">Closed ?:</label>
+            <input type="checkbox" name="" id="">
+        </div>
+        <div class="sort">
+            <label for="">Sort :</label>
+            <input type="text" name="" id="">
+            <label for="">Descending ?:</label>
+            <input type="checkbox" name="" id="">
+        </div>
+        <div class="list">
+            <label for="">Bug :</label>
+            <input type="text" name="" id="">
+            <input type="button" value="Add Bug">
+            <input type="button" value="Remove Closed">
+            <ol>
+                <li>Bug - 1</li>
+                <li class="closed">Bug - 2</li>
+                <li>Bug - 3</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>
