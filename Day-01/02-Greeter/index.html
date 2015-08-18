@@ -4,11 +4,25 @@
     <meta charset="UTF-8">
     <title>Greeter</title>
     <script src="angular.js"></script>
+    <script>
+    var greeterApp = angular.module("greeterApp", []);
+    greeterApp.controller("greetController", function($scope){
+        $scope.firstName = 'Magesh';
+        $scope.lastName = 'Kuppan';
+        $scope.onGreetClick = function(){
+            var msg = 'Hi ' + $scope.firstName + ' ' + $scope.lastName + ', Have a nice day!';
+            $scope.greetMsg = msg;
+        };
+    });
+    </script>
 </head>
-<body>
-    <input type="text">
-    <input type="text">
-    <input type="button" value="Greet">
-    <div></div>
+<body ng-app="greeterApp">
+   <div ng-controller="greetController">
+        <input type="text" ng-model="firstName">
+        <input type="text" ng-model="lastName">
+        <input type="button" value="Greet" ng-click="onGreetClick()">
+        <div ng-bind="greetMsg"></div>
+   </div>
+
 </body>
 </html>
