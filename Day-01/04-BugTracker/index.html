@@ -33,32 +33,66 @@
             cursor: pointer;
         }
     </style>
+    <script src="angular.js"></script>
+    <script>
+        var bugTrackerApp = angular.module("bugTrackerApp", []);
+
+        function Bug(name, isClosed){
+            this.name = name;
+            this.isClosed = isClosed;
+        }
+
+
+        bugTrackerApp.controller("bugsController", function($scope){
+            $scope.bugs = [
+                new Bug('stack overflow error', false ),
+                new Bug('object reference not set to an instance of an object', false),
+                new Bug('undefined is not a function', false ),
+                new Bug('garbage collector not in time', false )
+            ];
+            $scope.newBug = '';
+            $scope.addBug = function(){
+                var newBug = new Bug($scope.newBug,false);
+                $scope.bugs.push(newBug);
+            };
+            $scope.toggle = function(bug){
+                bug.isClosed = !bug.isClosed;
+            };
+            $scope.getClosedCount = function(){
+                return $scope.bugs.filter(function (bug){
+                    return bug.isClosed;
+                }).length;
+            };
+        });
+
+    </script>
 </head>
-<body>
+<body ng-app="bugTrackerApp">
     <h1>Bug Tracker</h1>
-    <div class="content">
-        <div class="stats"><span class="closed">2</span> / <span>5</span></div>
+    <div class="content" ng-controller="bugsController">
+        <div class="stats">
+        <span class="closed">{{getClosedCount()}}</span>
+        /
+        <span>{{bugs.length}}</span></div>
         <div class="search">
             <label for="">Search :</label>
-            <input type="text" name="" id="">
+            <input type="text">
             <label for="">Closed ?:</label>
-            <input type="checkbox" name="" id="">
+            <input type="checkbox">
         </div>
         <div class="sort">
             <label for="">Sort :</label>
-            <input type="text" name="" id="">
+            <input type="text">
             <label for="">Descending ?:</label>
-            <input type="checkbox" name="" id="">
+            <input type="checkbox">
         </div>
         <div class="list">
             <label for="">Bug :</label>
-            <input type="text" name="" id="">
-            <input type="button" value="Add Bug">
+            <input type="text" ng-model="newBug">
+            <input type="button" value="Add Bug" ng-click="addBug()">
             <input type="button" value="Remove Closed">
             <ol>
-                <li>Bug - 1</li>
-                <li class="closed">Bug - 2</li>
-                <li>Bug - 3</li>
+                <li ng-repeat="bug in bugs" ng-click="toggle(bug)">{{bug}}</li>
             </ol>
         </div>
     </div>
