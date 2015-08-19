@@ -96,25 +96,20 @@
             return Bug;
         });
 
-        bugTrackerApp.controller("bugsController", function($scope, Bug){
-            $scope.bugs = [
-                new Bug({
-                    name : 'stack overflow error'
-                    , isClosed : true
-                    , createdAt : new Date(2015,7,1)}),
-                new Bug({
-                    name : 'object reference not set to an instance of an object'
-                    , isClosed : false
-                    , createdAt : new Date(2015,7,5)}),
-                new Bug({
-                    name : 'undefined is not a function'
-                    , isClosed : true
-                    , createdAt : new Date(2015,7,12)} ),
-                new Bug({
-                    name : 'garbage collector execution error'
-                    , isClosed : false
-                    , createdAt : new Date(2015,7,17)} )
-            ];
+        /*
+        create a factory "bugService" returing an object containing a method "getAll". This method will talk to the server using $http, transform the data and return.  The controller will use this service to get the data from the server
+
+        */
+
+        bugTrackerApp.controller("bugsController", function($scope, Bug, $http){
+            $scope.bugs = [];
+            var p = $http.get("http://localhost:3000/bugs");
+            p.then(function(response){
+                $scope.bugs = response.data.map(function(bugData){
+                    return new Bug(bugData);
+                });
+            });
+
             $scope.newBug = '';
             $scope.addBug = function(){
                 var newBug = new Bug({name : $scope.newBug});
