@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+    /*Use Cases*/
+    /*
+    1. Add a bug - done
+    2. List the bugs - done
+    3. Toggle the completion status of the bugs - done
+    3.5 Remove closed bugs - done
+    4. Display statistics ( closed / total ) - done
+    5. Search for a bug - done
+    6. Sort the bugs - done
+    7. Improvise on how the bug is displayed - done
+    8. Display the createdAt time
+    9. Persist the bugs in the server
+    10. Repeat 1-9 for 'Project'
+    */
+    </script>
+    <style>
+        .closed {
+            color : red;
+            text-decoration: line-through;
+            font-style: italic;
+            font-weight: bold;
+        }
+        div {
+            margin-bottom: 10px;
+        }
+        ol{
+            list-style: none;
+            width: 60%;
+        }
+        li{
+            border : 2px solid gray;
+            background-color: #e7e7e7;
+            border-radius: 5px;
+            margin: 5px;
+            padding: 3px;
+            cursor: pointer;
+        }
+        li .bugName{
+            font-size: 18pt;
+            font-weight: bold;
+            margin-bottom: 0px;
+        }
+        li .timestamp{
+            font-style: italic;
+            margin-bottom: 0px;
+            font-size: small;
+        }
+    </style>
+    <script src="angular.js"></script>
+    <script src="moment.js"></script>
+
+    <script>
+
+        var utils = angular.module('utils', []);
+        utils.value('defaultTrimLength', 30);
+        utils.filter('trimText', function(defaultTrimLength){
+            return function(data, trimLength){
+                trimLength = trimLength || defaultTrimLength;
+                return data.length < trimLength ? data : data.substr(0,trimLength) + '...';
+            }
+        });
+        utils.value('momentApi', moment);
+        utils.filter('toMoment', function(momentApi){
+            return function(data){
+                return momentApi(data).fromNow();
+            }
+        });
+
+
+        var bugTrackerApp = angular.module("bugTrackerApp", ["utils"]);
+
+        /*bugTrackerApp.value('Bug', function Bug(name, isClosed){
+            this.name = name;
+            this.isClosed = isClosed;
+            this.toggle = function(){
+                this.isClosed = !this.isClosed;
+            }
+        })*/
+
+        bugTrackerApp.factory('Bug', function(){
+            function Bug(defaults){
+                defaults = defaults || {};
+                this.name = defaults.name || '';
+                this.isClosed = defaults.isClosed || false;
+                this.createdAt = defaults.createdAt || new Date();
+            }
+            Bug.prototype.toggle = function(){
+                this.isClosed = !this.isClosed;
+            }
+            return Bug;
+        });
+
+        bugTrackerApp.controller("bugsController", function($scope, Bug){
+            $scope.bugs = [
+                new Bug({
+                    name : 'stack overflow error'
+                    , isClosed : true
+                    , createdAt : new Date(2015,7,1)}),
+                new Bug({
+                    name : 'object reference not set to an instance of an object'
+                    , isClosed : false
+                    , createdAt : new Date(2015,7,5)}),
+                new Bug({
+                    name : 'undefined is not a function'
+                    , isClosed : true
+                    , createdAt : new Date(2015,7,12)} ),
+                new Bug({
+                    name : 'garbage collector execution error'
+                    , isClosed : false
+                    , createdAt : new Date(2015,7,17)} )
+            ];
+            $scope.newBug = '';
+            $scope.addBug = function(){
+                var newBug = new Bug({name : $scope.newBug});
+                $scope.bugs.push(newBug);
+            };
+            $scope.toggle = function(bug){
+                bug.toggle();
+            };
+            $scope.removeClosed = function(){
+                for(var i= $scope.bugs.length -1; i>=0; i--){
+                    var bug = $scope.bugs[i];
+                    if (bug.isClosed)
+                        $scope.bugs.splice(i,1);
+                }
+            };
+        });
+    </script>
+</head>
+<body ng-app="bugTrackerApp">
+    <h1>Bug Tracker</h1>
+    <div class="content" ng-controller="bugsController">
+        <div class="stats">
+        <span class="closed">{{ (bugs | filter:{isClosed : true}).length }}</span>
+        /
+        <span>{{bugs.length}}</span></div>
+        <div class="search">
+            <label for="">Search :</label>
+            <input type="text" ng-model="searchBug.name">
+            <label for="">Closed ?:</label>
+            <input type="checkbox" ng-model="searchBug.isClosed">
+            <input type="button" value="Show All" ng-click="searchBug.isClosed = undefined">
+        </div>
+        <div class="sort">
+            <label for="">Sort :</label>
+            <input type="text" ng-model="sortBy">
+            <label for="">Descending ?:</label>
+            <input type="checkbox" ng-model="sortOrderInDescending">
+        </div>
+        <div class="list">
+            <label for="">Bug :</label>
+            <input type="text" ng-model="newBug">
+            <input type="button" value="Add Bug" ng-click="addBug()">
+            <input type="button" value="Remove Closed" ng-click="removeClosed()">
+            <ol>
+                <li
+                    ng-repeat="bug in bugs | filter:searchBug | orderBy:sortBy:sortOrderInDescending"
+                >
+                    <div class="bugName" ng-click="toggle(bug)" ng-class="{closed : bug.isClosed}">                        {{bug.name | trimText:40}}
+                    </div>
+                    <div class="timestamp">
+                        {{bug.createdAt | toMoment}}
+                    </div>
+                    </li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

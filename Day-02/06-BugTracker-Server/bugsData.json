@@ -1,0 +1,28 @@
+{
+  "bugs": [
+    {
+      "id": 1,
+      "name": "stack overflow error",
+      "isClosed": true,
+      "createdAt": "2015-07-31T18:30:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "object reference not set to an instance of an object",
+      "isClosed": false,
+      "createdAt": "2015-08-04T18:30:00.000Z"
+    },
+    {
+      "id": 3,
+      "name": "undefined is not a function",
+      "isClosed": true,
+      "createdAt": "2015-08-11T18:30:00.000Z"
+    },
+    {
+      "id": 4,
+      "name": "garbage collector execution error",
+      "isClosed": false,
+      "createdAt": "2015-08-16T18:30:00.000Z"
+    }
+  ]
+}
