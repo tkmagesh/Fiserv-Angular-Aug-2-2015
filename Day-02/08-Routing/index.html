@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Routing</title>
+    <script src="angular.js"></script>
+    <script src="angular-route.js"></script>
+    <script>
+        var routingApp = angular.module("routingApp", ["ngRoute"]);
+        routingApp.config(function($routeProvider){
+            $routeProvider
+                .when("/products", {
+                    //template : '<h3>Products</h3>'
+                    templateUrl : 'templates/productsTemplate.html',
+                    controller : 'productsController'
+                })
+                .when('/products/:id', {
+                    templateUrl : 'templates/productInfoTemplate.html',
+                    controller : 'productInfoController'
+                })
+                .when('/customers', {
+                    //template : '<h3>Customers</h3>'
+                    templateUrl : 'templates/customersTemplate.html'
+                })
+                .otherwise({
+                    redirectTo : '/products'
+                });
+        });
+
+        routingApp.service("productServer", function(){
+            this.getAll = function(){
+                return [
+                    {id : 1, name : "Pen", cost : 10, units : 100, desc : "Expetendis aut amet ullamco sed e an multos mentitum. Et quorum imitarentur an mentitum ut tamen appellat, nescius nulla ingeniis laboris qui dolore admodum qui officia. Doctrina e fabulas, duis incididunt an multos aliqua, sunt admodum relinqueret, quamquam nam amet, arbitror varias ullamco se multos litteris fidelissimae sed lorem incididunt quo vidisse, vidisse ad velit. Ubi amet incurreret non e noster offendit quibusdam. Quis incurreret ita graviterque. Commodo aut veniam, dolore singulis de officia. Eiusmod velit tempor nescius te occaecat se officia in ut quae ab minim te tempor labore magna id quid. Iudicem fugiat deserunt id ad duis noster sed deserunt id si veniam malis se appellat sed irure ut ubi magna officia."},
+                    {id : 2, name : "Hen", cost : 100, units : 30, desc : "Expetendis aut amet ullamco sed e an multos mentitum. Et quorum imitarentur an mentitum ut tamen appellat, nescius nulla ingeniis laboris qui dolore admodum qui officia. Doctrina e fabulas, duis incididunt an multos aliqua, sunt admodum relinqueret, quamquam nam amet, arbitror varias ullamco se multos litteris fidelissimae sed lorem incididunt quo vidisse, vidisse ad velit. Ubi amet incurreret non e noster offendit quibusdam. Quis incurreret ita graviterque. Commodo aut veniam, dolore singulis de officia. Eiusmod velit tempor nescius te occaecat se officia in ut quae ab minim te tempor labore magna id quid. Iudicem fugiat deserunt id ad duis noster sed deserunt id si veniam malis se appellat sed irure ut ubi magna officia."},
+                    {id : 3, name : "Ten", cost : 10, units : 10, desc : "Expetendis aut amet ullamco sed e an multos mentitum. Et quorum imitarentur an mentitum ut tamen appellat, nescius nulla ingeniis laboris qui dolore admodum qui officia. Doctrina e fabulas, duis incididunt an multos aliqua, sunt admodum relinqueret, quamquam nam amet, arbitror varias ullamco se multos litteris fidelissimae sed lorem incididunt quo vidisse, vidisse ad velit. Ubi amet incurreret non e noster offendit quibusdam. Quis incurreret ita graviterque. Commodo aut veniam, dolore singulis de officia. Eiusmod velit tempor nescius te occaecat se officia in ut quae ab minim te tempor labore magna id quid. Iudicem fugiat deserunt id ad duis noster sed deserunt id si veniam malis se appellat sed irure ut ubi magna officia."},
+                    {id : 4, name : "Den", cost : 500, units : 50, desc : "Expetendis aut amet ullamco sed e an multos mentitum. Et quorum imitarentur an mentitum ut tamen appellat, nescius nulla ingeniis laboris qui dolore admodum qui officia. Doctrina e fabulas, duis incididunt an multos aliqua, sunt admodum relinqueret, quamquam nam amet, arbitror varias ullamco se multos litteris fidelissimae sed lorem incididunt quo vidisse, vidisse ad velit. Ubi amet incurreret non e noster offendit quibusdam. Quis incurreret ita graviterque. Commodo aut veniam, dolore singulis de officia. Eiusmod velit tempor nescius te occaecat se officia in ut quae ab minim te tempor labore magna id quid. Iudicem fugiat deserunt id ad duis noster sed deserunt id si veniam malis se appellat sed irure ut ubi magna officia."}
+                ]
+            }
+        });
+
+        routingApp.controller("productsController", function(productServer, $scope){
+            $scope.products = productServer.getAll();
+        });
+
+        routingApp.controller("productInfoController", function(productServer, $scope, $routeParams){
+            var id = parseInt($routeParams.id);
+            $scope.product = productServer.getAll().filter(function(product){
+                return product.id === id;
+            })[0];
+        });
+
+    </script>
+</head>
+<body ng-app="routingApp">
+    <h1>Flopkart</h1>
+    <a href="#/products">Products</a>
+    <a href="#/customers">Customers</a>
+    <hr>
+    <div ng-view></div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -74,6 +74,12 @@
 
 
         var bugTrackerApp = angular.module("bugTrackerApp", ["utils"]);
+        bugTrackerApp.config(function(){
+            console.log("app entered the config phase");
+        });
+        bugTrackerApp.run(function(){
+            console.log("app entered the run phase");
+        });
 
         /*bugTrackerApp.value('Bug', function Bug(name, isClosed){
             this.name = name;
@@ -101,7 +107,7 @@
 
         */
 
-        bugTrackerApp.factory("bugService", function($http, Bug, $q){
+        /*bugTrackerApp.factory("bugServer", function($http, Bug, $q){
             return {
                 getAll : function(){
                     var deferred = $q.defer();
@@ -117,10 +123,28 @@
                     return deferred.promise;
                 }
             }
+        });*/
+
+        bugTrackerApp.service("bugServer", function($http, Bug, $q){
+
+            this.getAll = function(){
+                    var deferred = $q.defer();
+
+                    var p = $http.get("http://localhost:3000/bugs");
+                    p.then(function(response){
+                        var bugs = response.data.map(function(bugData){
+                            return new Bug(bugData);
+                        });
+                        deferred.resolve(bugs);
+                    });
+
+                    return deferred.promise;
+                };
+
         });
 
-        bugTrackerApp.controller("bugsController", function($scope, Bug, bugService){
-            bugService.getAll().then(function(bugs){
+        bugTrackerApp.controller("bugsController", function($scope, Bug, bugServer){
+            bugServer.getAll().then(function(bugs){
                 $scope.bugs = bugs;
             });
 
