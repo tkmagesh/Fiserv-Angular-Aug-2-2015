@@ -101,14 +101,29 @@
 
         */
 
-        bugTrackerApp.controller("bugsController", function($scope, Bug, $http){
-            $scope.bugs = [];
-            var p = $http.get("http://localhost:3000/bugs");
-            p.then(function(response){
-                $scope.bugs = response.data.map(function(bugData){
-                    return new Bug(bugData);
-                });
+        bugTrackerApp.factory("bugService", function($http, Bug, $q){
+            return {
+                getAll : function(){
+                    var deferred = $q.defer();
+
+                    var p = $http.get("http://localhost:3000/bugs");
+                    p.then(function(response){
+                        var bugs = response.data.map(function(bugData){
+                            return new Bug(bugData);
+                        });
+                        deferred.resolve(bugs);
+                    });
+
+                    return deferred.promise;
+                }
+            }
+        });
+
+        bugTrackerApp.controller("bugsController", function($scope, Bug, bugService){
+            bugService.getAll().then(function(bugs){
+                $scope.bugs = bugs;
             });
+
 
             $scope.newBug = '';
             $scope.addBug = function(){
